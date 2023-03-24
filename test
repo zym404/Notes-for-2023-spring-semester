@@ -1,1 +1,88 @@
+---
+title: 计量经济学·第四周
+grammar_cjkRuby: true
+---
+## 第四讲 假设检验
+- 声明假设
+- 计算t统计量 `!$t=\frac{\bar Y - \mu_{Y,0}}{\sqrt{S^2_Y/n}}$`
+- p-value = 2`!$\Phi(|t|)$`
+- 确定显著水平
+- 比较p值和显著水平：p高，接受H0，p低，拒绝H0接受H1
 
+### 临界值（critical value）
+当p值恰好为1%（2.58），5%（1.96），10%（1.645）时，t统计量的值
+计算完t值后可直接与临界值做比较
+当t大于临界值，拒绝H0，接受H1
+
+### t分布
+t统计量服从于t分布
+当n(n>50)足够大，t分布近似于标准正态分布
+
+### 置信区间（confidence interval，CI）
+`!$[\bar Y -1.96*SE(\bar Y),\bar Y+1.96*SE(\bar Y)]$`
+`!$SE(\bar Y) = \sqrt{S^2_Y/n}$`
+`!$t=\frac{\bar Y - \mu_{Y,0}}{SE(\bar Y)}$`
+估计量才有标准误
+上述CI是置信水平为95%的置信区间
+1. 若`!$\mu_{Y,0}$`落在CI中，则当显著水平为5%时，检验会接受H0
+2. 该区间有95%的概率包含`!$\mu_Y$`
+  
+
+## 第五讲 一元线性回归
+`!$Y_i=\beta_0+\beta_iX_i+\mu_i.......(i=1,2,...,n)$`
+Yi——被解释变量（dependent variable）/因变量（结果）
+Xi——解释变量（independent variable）/自变量（原因）
+`!$\mu_i$`——误差项（error term）`和残差区分！`
+`!$\beta_0$`——截距（constant）
+`!$\beta_1$`——系数（coefficient）
+i——样本编号
+`!$\frac{\partial}{\partial X_i}(\beta_0+\beta_iX_i+\mu)=\beta_1$`
+`!$(\beta_0,\beta_1)叫做待估参数，(\hat{\beta_0},\hat{\beta_1})为估计量$`
+得出估计量之后
+`!$\hat{Y_i}=\hat{\beta_0}+\hat{\beta_i}Xi为Y_i的模型预估值$`
+`!$有了\hat{Y_i}后，残差\hat{u_i}为：$`
+`!$\hat{u_i}=Y_i-\hat{Y_i}=Y_i-\hat{\beta_0}-\hat{\beta_1}X_i$`
+
+优化问题的最优解`!$(\hat{\beta_0},\hat{\beta_1})$`为普通最小二乘（OLS，ordinary least squared）估计量
+`!$\min\limits_{\hat{\beta_0}\hat{\beta_1}}=\sum\limits_{i=1}^{n}(Y_i-\hat{\beta_0}-\hat{\beta_1}X_i)^2$`
+`!$F.O.C.1:\Sigma\hat{u_i}=0$`
+`!$F.O.C.2:\Sigma\hat{u_i}X_i=0$`
+`!$\hat{\beta_0}=\bar Y-\hat{\beta_1} \bar X$`
+`!$\hat{\beta_1} = \frac{\Sigma(X_i-\bar X)(Y_i-\bar Y)}{\Sigma(X_i-\bar X)^2} = \frac{S_{XY}}{S_{X^2}}$`
+>注意一个结论：`!$\Sigma X_i^2-n\bar X^2 = \Sigma(X_i-\bar X)^2$`
+
+
+### R^2：拟合优度（measure of fit）
+R^2 = ESS/TSS
+`!$ESS = \sum\limits_{i=1}^{n}(\hat{Y_i}-\bar Y)^2$`
+ESS:被解释的平方和（Explained sum of squared）
+`!$TSS = \sum\limits_{i=1}^{n}(Y_i-\bar Y)^2$`
+TSS：总平方和（Total sum of squared）
+`!$SSR=\sum\limits_{i=1}^{n}\hat{u_i}^2=\sum\limits_{i=1}^{n}(Y_i-\hat{Y_I})^2$`
+SSR：残差平方和（sum of squared residuals）
+
+TSS=ESS+SSR
+R^2 = 1-SSR/SST
+
+>OLS估计量的四个有用性质：
+>1. `!$E(u_i)=E[E(u_i|X_i)]=0$`
+>2. `!$cov(X_i,u_i)=E(u_iX_i)=0$`
+>3. `!$\bar{\hat{u_i}}=\frac{1}{n}\sum\limits_{i=1}^{n}\hat{u_i}$` `F.O.C.1`
+>4. `!$\sum\limits_{i=1}^{n}X_i\hat{u_i}=0$` `F.O.C.2`
+
+**关于R^2**
+1. 永远在0到1之间
+2. 当R^2趋近于0时，表示模型垃圾
+3. 当R^2趋近于1时，表示模型很棒
+
+R^2只和预测有关！！！ceof表示关系，R^2的大小不能说明问题
+
+### 回归标准误（SER，standard error of regression)
+`!$SER = \sqrt{\frac{1}{n-2}\sum\limits_{i=1}^{n}(\hat{u_i}-\bar{\hat{u_i}})^2}$`
+`!$SER = \sqrt{\frac{1}{n-2}\sum\limits_{i=1}^{n}(\hat{u_i})^2}$`
+`!$SER = \sqrt{\frac{1}{n-2}SSR}$`
+
+### 最小二乘假设
+假设一.  `!$E(u_i|X_i)=0$` 满足的情况ui和Xi不相关
+假设二：（Xi，Yi）于i=1，2，……，n服从i.i.d独立同分布 满足条件：简单随机抽样
+假设三： `!$0<E[X_i^4]<\infty$`满足条件：Xi，Yi没有极大异常值
