@@ -1,55 +1,37 @@
 ---
-title: 计量经济学·第四周
+title: 计量经济学·第四讲 一元线性回归
 grammar_cjkRuby: true
 ---
-## 第四讲 假设检验
-- 声明假设
-- 计算t统计量 `!$t=\frac{\bar Y - \mu_{Y,0}}{\sqrt{S^2_Y/n}}$`
-- p-value = 2`!$\Phi(|t|)$`
-- 确定显著水平
-- 比较p值和显著水平：p高，接受H0，p低，拒绝H0接受H1
 
-### 临界值（critical value）
-当p值恰好为1%（2.58），5%（1.96），10%（1.645）时，t统计量的值
-计算完t值后可直接与临界值做比较
-当t大于临界值，拒绝H0，接受H1
-
-### t分布
-t统计量服从于t分布
-当n(n>50)足够大，t分布近似于标准正态分布
-
-### 置信区间（confidence interval，CI）
-`!$[\bar Y -1.96*SE(\bar Y),\bar Y+1.96*SE(\bar Y)]$`
-`!$SE(\bar Y) = \sqrt{S^2_Y/n}$`
-`!$t=\frac{\bar Y - \mu_{Y,0}}{SE(\bar Y)}$`
-估计量才有标准误
-上述CI是置信水平为95%的置信区间
-1. 若`!$\mu_{Y,0}$`落在CI中，则当显著水平为5%时，检验会接受H0
-2. 该区间有95%的概率包含`!$\mu_Y$`
-  
-
-## 第五讲 一元线性回归
-`!$Y_i=\beta_0+\beta_iX_i+\mu_i.......(i=1,2,...,n)$`
-Yi——被解释变量（dependent variable）/因变量（结果）
+## 一元线性回归
+`!$Y_i=\beta_0+\beta_iX_i+u_i.......(i=1,2,...,n)$`
+>Yi——被解释变量（dependent variable）/因变量（结果）
 Xi——解释变量（independent variable）/自变量（原因）
 `!$\mu_i$`——误差项（error term）`和残差区分！`
 `!$\beta_0$`——截距（constant）
 `!$\beta_1$`——系数（coefficient）
 i——样本编号
-`!$\frac{\partial}{\partial X_i}(\beta_0+\beta_iX_i+\mu)=\beta_1$`
+
+一元线性回归中的因果关系：
+`!$\frac{\partial}{\partial X_i}(\beta_0+\beta_iX_i+\mu)=\beta_1，所以\beta_1表示X_i和Y_i之间的因果关系$`
+
+参数的估计：
 `!$(\beta_0,\beta_1)叫做待估参数，(\hat{\beta_0},\hat{\beta_1})为估计量$`
 得出估计量之后
 `!$\hat{Y_i}=\hat{\beta_0}+\hat{\beta_i}Xi为Y_i的模型预估值$`
 `!$有了\hat{Y_i}后，残差\hat{u_i}为：$`
 `!$\hat{u_i}=Y_i-\hat{Y_i}=Y_i-\hat{\beta_0}-\hat{\beta_1}X_i$`
 
+#### OLS估计量的推导
 优化问题的最优解`!$(\hat{\beta_0},\hat{\beta_1})$`为普通最小二乘（OLS，ordinary least squared）估计量
 `!$\min\limits_{\hat{\beta_0}\hat{\beta_1}}=\sum\limits_{i=1}^{n}(Y_i-\hat{\beta_0}-\hat{\beta_1}X_i)^2$`
+求偏导，得出：
 `!$F.O.C.1:\Sigma\hat{u_i}=0$`
 `!$F.O.C.2:\Sigma\hat{u_i}X_i=0$`
+
 `!$\hat{\beta_0}=\bar Y-\hat{\beta_1} \bar X$`
 `!$\hat{\beta_1} = \frac{\Sigma(X_i-\bar X)(Y_i-\bar Y)}{\Sigma(X_i-\bar X)^2} = \frac{S_{XY}}{S_{X^2}}$`
->注意一个结论：`!$\Sigma X_i^2-n\bar X^2 = \Sigma(X_i-\bar X)^2$`
+>注意一个结论用于化简：`!$\Sigma X_i^2-n\bar X^2 = \Sigma(X_i-\bar X)^2$`
 
 
 ### R^2：拟合优度（measure of fit）
@@ -67,22 +49,70 @@ R^2 = 1-SSR/SST
 >OLS估计量的四个有用性质：
 >1. `!$E(u_i)=E[E(u_i|X_i)]=0$`
 >2. `!$cov(X_i,u_i)=E(u_iX_i)=0$`
->3. `!$\bar{\hat{u_i}}=\frac{1}{n}\sum\limits_{i=1}^{n}\hat{u_i}$` `F.O.C.1`
+>3. `!$\bar{\hat{u_i}}=\frac{1}{n}\sum\limits_{i=1}^{n}\hat{u_i}=0$` `F.O.C.1`
 >4. `!$\sum\limits_{i=1}^{n}X_i\hat{u_i}=0$` `F.O.C.2`
+>注：1、2依赖OLS检验
 
 **关于R^2**
 1. 永远在0到1之间
 2. 当R^2趋近于0时，表示模型垃圾
 3. 当R^2趋近于1时，表示模型很棒
 
-R^2只和预测有关！！！ceof表示关系，R^2的大小不能说明问题
+R^2 只和预测有关！！！ceof表示关系，R^2的大小不能说明问题
 
 ### 回归标准误（SER，standard error of regression)
 `!$SER = \sqrt{\frac{1}{n-2}\sum\limits_{i=1}^{n}(\hat{u_i}-\bar{\hat{u_i}})^2}$`
 `!$SER = \sqrt{\frac{1}{n-2}\sum\limits_{i=1}^{n}(\hat{u_i})^2}$`
+
 `!$SER = \sqrt{\frac{1}{n-2}SSR}$`
 
 ### 最小二乘假设
 假设一.  `!$E(u_i|X_i)=0$` 满足的情况ui和Xi不相关
 假设二：（Xi，Yi）于i=1，2，……，n服从i.i.d独立同分布 满足条件：简单随机抽样
 假设三： `!$0<E[X_i^4]<\infty$`满足条件：Xi，Yi没有极大异常值
+
+### 估计量的期望
+`!$Y_i=\beta_0+\beta_iX_i+\mu_i.......(i=1,2,...,n)...①$`
+`!$\bar Y = \frac 1 n \Sigma(\beta_0+\beta_iX_i+u_i)  =\beta_0+\beta_i\bar X +\bar u...②$`
+①-②： `!$Y_i-\bar Y=\beta_i(X_i-\bar X)+(u_i-\bar u)$`
+代入`!$\hat{\beta_1} = \frac{\Sigma(X_i-\bar X)(Y_i-\bar Y)}{\Sigma(X_i-\bar X)^2} = \frac{S_{XY}}{S_{X^2}}$`
+得：
+`!$\hat{\beta_1} = \frac{\Sigma(X_i-\bar X)[\beta_i(X_i-\bar X)+(u_i-\bar u)]}{\Sigma(X_i-\bar X)^2} = \beta_1+ \frac{\Sigma(X_i-\bar X)(u_i-\bar u)}{\Sigma(X_i-\bar X)^2}$`
+尾项分子：
+`!$\Sigma(X_i-\bar X)(u_i-\bar u)=\Sigma(X_i-\bar X)u_i-\Sigma(Xi-\bar X)\bar u=\Sigma(X_i-\bar X)u_i-\Sigma X_i\bar u+\Sigma\bar X\bar u=\Sigma(X_i-\bar X)u_i-n\bar X\bar u+n\bar X\bar u=\Sigma(X_i-\bar X)u_i$`
+
+`!$\hat \beta_1 = \beta_1 + \frac{\Sigma(X_i-\bar X)u_i}{\Sigma(X_i-\bar X)^2}$`
+
+`!$E(\hat \beta_1) = \beta_1 + E(\frac{\Sigma(X_i-\bar X)u_i}{\Sigma(X_i-\bar X)^2})=\beta_1+E[ E(\frac{\Sigma(X_i-\bar X)u_i}{\Sigma(X_i-\bar X)^2}|X_i)]=\beta_1+E[ \frac{\Sigma(X_i-\bar X)}{\Sigma(X_i-\bar X)^2}E(u_i|X_i)]=\beta_1$`
+所以`!$\hat\beta_1$`是无偏估计量
+`!$\hat{\beta_1} =\beta_1+ \frac{\frac{1}{n-1}\Sigma(X_i-\bar X)(u_i-\bar u)}{\frac{1}{n-1}\Sigma(X_i-\bar X)^2}=\beta_1+\frac{S_{Xu}}{S_X^2}\rightarrow^p\beta_1+\frac{\sigma_{Xu}}{\sigma_X^2}$`
+1. 当OLS假设1被违反时，`!$\sigma_{Xu}\ne0,\hat\beta_1$`是有偏且不一致的
+2. 当`!$\sigma_{Xu}$`越大，偏差越大
+3. 当`!$\sigma_{X}^2$`越大，偏差越小
+
+### 估计量的方差
+当n很大时
+`!$\hat{\beta_1} -\beta_1= \frac{\frac{1}{n}\Sigma(X_i-\bar X)u_i}{\frac{1}{n}\Sigma(X_i-\bar X)^2},设\nu_i=(X_i-\bar X)u_i$`
+`!$\hat{\beta_1} -\beta_1= \frac{\bar \nu}{\frac 1 n\Sigma(X_i-\bar X)^2}=\frac{\bar \nu}{S_X^2}\rightarrow^p\frac{\bar \nu}{\sigma_X^2}$`
+`!$var(\hat{\beta_1} -\beta_1)=var(\hat\beta_1)=var(\frac{\bar\nu}{\sigma_X^2})=\frac{\sigma_\nu^2}{(n\sigma_X^2)^2}$`
+`!$var(\bar\nu)=\sigma^2_\nu/n$`
+
+### 估计量的分布
+CLT：中心极限定理
+1. Yi对于i = 1...n 服从i.i.d.
+2. `!$E(Y_i)=\mu_Y,且0<\sigma_Y^2<\infty$`
+3. 当n足够大时
+   
+结论：`!$\frac{\bar Y-\mu_y}{\sqrt{(\sigma_Y^2/n)}} \sim N(0,1)$`
+`!$\nu_i = (X_i-\bar X)u_i$`
+`!$\mu_{\nu} = E[(X_i-\bar X)u_i]=E[X_iu_i]-\bar XE[u_i]=0$`
+
+`!$\bar\nu \sim N(0,\sigma_\nu^2/n)$`
+`!$\bar\beta_1-\beta_1 = \frac{\bar\nu}{\sigma_X^2}\sim N(0,\frac{\sigma_\nu^2/n}{(\sigma_X^2)^2})$`
+移项得：`!$\hat\beta_1\sim N(\beta_1,\frac{\sigma_\nu^2/n}{(\sigma_X^2)^2})$`
+
+### 利用OLS假设推导`!$\hat\beta_1$`
+`!$cov(Y_i,X_i)=cov(\beta_0+\beta_1X_i+u_i,X_i)=0+\beta_1cov(X_i,X_i)+cov(u_i,X_i)=\beta_1cov(X_i,X_i)$`
+`!$\beta_1=\frac{\sigma_{XY}}{\sigma_X^2}$`
+用`!$\hat\beta_1=\frac{S_{XY}}{S_X^2}$`估计上式
+`除非明确要求不允许用OLS假设，可以用简单形式推导`
